@@ -1,0 +1,44 @@
+{
+  "name": "go-shichi-go",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev -- vite",
+    "build": "vite build",
+    "build:client": "vite build --outDir dist/client",
+    "preview": "wrangler pages dev dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@tanstack/react-query": "^5.100.10",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.18",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260511.1",
+    "@hono/vite-cloudflare-pages": "^0.4.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10.3.0",
+    "eslint-plugin-security": "^4.0.0",
+    "happy-dom": "^20.9.0",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6",
+    "wrangler": "^4.90.1"
+  }
+}
