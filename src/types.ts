@@ -72,3 +72,18 @@ export interface ApiResponse<T> {
   data?: T
   error?: string
 }
+
+export interface FollowStatus {
+  following: boolean
+  followers: number
+  followingCount: number
+}
+
+export interface Notification {
+  id: string
+  type: 'like' | 'follow'
+  fromUser: Pick<User, 'id' | 'displayName' | 'iconUrl'>
+  postId?: string
+  createdAt: Date
+  read: boolean
+}

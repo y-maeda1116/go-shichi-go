@@ -16,12 +16,20 @@ const pages = new Hono<{
   Bindings: { DATABASE_URL: string }
 }>()
 
-function renderPage(component: React.ReactElement, user?: AuthUser, title?: string) {
+function renderPage(component: React.ReactElement, user?: AuthUser, title?: string, ogImage?: string) {
   const html = renderToString(
     <Layout user={user}>
       {component}
     </Layout>,
   )
+
+  const ogTags = ogImage
+    ? `
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="${ogImage}">`
+    : ''
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -29,6 +37,9 @@ function renderPage(component: React.ReactElement, user?: AuthUser, title?: stri
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${title ?? '五七五 — 俳句・短歌SNS'}</title>
+  <meta property="og:title" content="${title ?? '五七五 — 俳句・短歌SNS'}">
+  <meta property="og:site_name" content="五七五">
+  ${ogTags}
   <link rel="stylesheet" href="/styles/vertical.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap">
 </head>
@@ -166,6 +177,7 @@ pages.get('/posts/:id', optionalAuthMiddleware, async (c) => {
     <PostDetail post={post} />,
     currentUser,
     `${post.line1}${post.line2}${post.line3} — 五七五`,
+    `/ogp/posts/${postId}`,
   )
   return c.html(html)
 })

@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import type { AuthUser } from '@/types'
+import { NotificationBell } from '@/client/components/NotificationBell'
 
 interface LayoutProps {
   user?: AuthUser
@@ -39,6 +40,7 @@ export function Layout({ user, children }: LayoutProps) {
           <button className="theme-toggle" onClick={toggleTheme}>
             {dark ? '☀' : '☾'}
           </button>
+          {user && <NotificationBell />}
           {user ? (
             <>
               <a href="/profile">{user.displayName}</a>

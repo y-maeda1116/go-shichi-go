@@ -1,5 +1,11 @@
 import type { PostWithAuthor } from '@/types'
 
+function extractHashtags(text: string): string[] {
+  const matches = text.match(/#([^\s#]+)/g)
+  if (!matches) return []
+  return [...new Set(matches.map((m) => m.slice(1)))]
+}
+
 interface PostCardProps {
   post: PostWithAuthor
   onLike: (postId: string) => void
@@ -20,6 +26,13 @@ export function PostCard({ post, onLike }: PostCardProps) {
       </div>
       {post.seasonWord && (
         <span className="season-word">{post.seasonWord}</span>
+      )}
+      {post.authorNote && extractHashtags(post.authorNote).length > 0 && (
+        <div className="hashtag-list">
+          {extractHashtags(post.authorNote).map((tag) => (
+            <a key={tag} href={`/?season=&tag=${tag}`} className="hashtag">#{tag}</a>
+          ))}
+        </div>
       )}
       {post.imageUrl && (
         <img src={post.imageUrl} alt="" className="post-image" />

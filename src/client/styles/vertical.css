@@ -561,3 +561,131 @@ body {
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+
+/* Follow Button */
+.btn-follow {
+  padding: 6px 16px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: white;
+  font-family: var(--font-mincho);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-follow:hover {
+  opacity: 0.9;
+}
+
+.btn-follow.following {
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.profile-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.stat strong {
+  color: var(--color-text);
+}
+
+/* Notification Bell */
+.notification-bell {
+  position: relative;
+}
+
+.bell-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  position: relative;
+  padding: 2px 4px;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #e53e3e;
+  color: white;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.notification-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+}
+
+.notification-item.unread {
+  background: var(--color-accent-light);
+}
+
+.notification-icon {
+  flex-shrink: 0;
+}
+
+.notification-text {
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Hashtag */
+.hashtag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 1px 6px;
+  background: var(--color-bg);
+  color: var(--color-accent);
+  border-radius: 2px;
+  text-decoration: none;
+  margin-right: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.hashtag:hover {
+  border-color: var(--color-accent);
+}
+
+.hashtag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
