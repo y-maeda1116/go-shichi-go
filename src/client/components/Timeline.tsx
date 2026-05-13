@@ -2,9 +2,20 @@ import { useState } from 'react'
 import { usePosts } from '@/client/hooks/usePosts'
 import { PostCard } from '@/client/components/PostCard'
 import { PostForm } from '@/client/components/PostForm'
+import { TimelineSkeleton } from '@/client/components/Skeleton'
+
+const SEASONS = [
+  { value: '', label: 'すべて' },
+  { value: '春', label: '春' },
+  { value: '夏', label: '夏' },
+  { value: '秋', label: '秋' },
+  { value: '冬', label: '冬' },
+  { value: '新年', label: '新年' },
+]
 
 export function Timeline() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePosts()
+  const [season, setSeason] = useState('')
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = usePosts(season || undefined)
   const [refreshKey, setRefreshKey] = useState(0)
 
   const posts = data?.pages.flatMap((page) => page.data) ?? []
@@ -32,11 +43,29 @@ export function Timeline() {
   return (
     <div className="timeline" key={refreshKey}>
       <PostForm onSubmit={handlePost} />
-      <div className="timeline-posts">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} onLike={handleLike} />
+      <div className="season-filter">
+        {SEASONS.map((s) => (
+          <button
+            key={s.value}
+            className={`season-button ${season === s.value ? 'active' : ''}`}
+            onClick={() => setSeason(s.value)}
+          >
+            {s.label}
+          </button>
         ))}
       </div>
+      {isLoading ? (
+        <TimelineSkeleton />
+      ) : (
+        <div className="timeline-posts">
+          {posts.length === 0 && (
+            <p className="empty-message">投稿がありません</p>
+          )}
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} onLike={handleLike} />
+          ))}
+        </div>
+      )}
       {hasNextPage && (
         <button
           className="btn-primary"

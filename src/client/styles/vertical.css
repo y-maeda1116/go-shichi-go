@@ -327,3 +327,237 @@ body {
   margin-top: 8px;
   border: 1px solid var(--color-border);
 }
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg) 25%, var(--color-border) 50%, var(--color-bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+  opacity: 0.7;
+}
+
+.skeleton-lines {
+  writing-mode: vertical-rl;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 16px;
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.skeleton-line {
+  border-radius: 2px;
+}
+
+/* Post Detail */
+.post-detail {
+  display: flex;
+  gap: 24px;
+}
+
+.post-detail-main {
+  flex: 1;
+}
+
+.post-detail-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.post-card-large {
+  min-height: 400px;
+}
+
+.author-note {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.author-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  margin-bottom: 16px;
+}
+
+.author-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+}
+
+.author-name {
+  font-size: 14px;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.author-name:hover {
+  text-decoration: underline;
+}
+
+.btn-back {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-family: var(--font-mincho);
+  font-size: 13px;
+}
+
+.btn-back:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* User Profile */
+.user-profile {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  margin-bottom: 24px;
+}
+
+.profile-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-display-name {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.profile-bio {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.btn-edit {
+  padding: 6px 16px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-family: var(--font-mincho);
+  font-size: 13px;
+  background: var(--color-surface);
+}
+
+.btn-edit:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.section-title {
+  font-size: 16px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.empty-message {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .post-detail {
+    flex-direction: column;
+  }
+  .post-detail-sidebar {
+    width: 100%;
+  }
+}
+
+/* Season Filter */
+.season-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.season-button {
+  padding: 4px 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mincho);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.season-button:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.season-button.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+}
+
+/* Dark Mode */
+:root.dark {
+  --color-bg: #1a1a1a;
+  --color-surface: #2a2a2a;
+  --color-text: #e8e0d8;
+  --color-text-secondary: #999090;
+  --color-border: #444;
+  --color-accent: #c4956a;
+  --color-accent-light: #3a2a1a;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

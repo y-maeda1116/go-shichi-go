@@ -1,4 +1,4 @@
-import { eq, desc, count, and, lt } from 'drizzle-orm'
+import { eq, desc, count, and, lt, ilike } from 'drizzle-orm'
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
 
@@ -49,13 +49,17 @@ export async function updateUser(db: Db, userId: string, data: {
   return rows[0]
 }
 
-export async function getTimelinePosts(db: Db, cursor?: string) {
+export async function getTimelinePosts(db: Db, cursor?: string, season?: string) {
+  const seasonFilter = season ? eq(schema.posts.seasonWord, season) : undefined
+
   if (cursor) {
     const cursorPost = await db.select({ createdAt: schema.posts.createdAt })
       .from(schema.posts)
       .where(eq(schema.posts.id, cursor))
       .limit(1)
     if (cursorPost[0]) {
+      const conditions = [lt(schema.posts.createdAt, cursorPost[0].createdAt)]
+      if (seasonFilter) conditions.push(seasonFilter)
       const rows = await db.select({
         post: schema.posts,
         author: {
@@ -66,7 +70,7 @@ export async function getTimelinePosts(db: Db, cursor?: string) {
       })
         .from(schema.posts)
         .innerJoin(schema.users, eq(schema.posts.userId, schema.users.id))
-        .where(lt(schema.posts.createdAt, cursorPost[0].createdAt))
+        .where(and(...conditions))
         .orderBy(desc(schema.posts.createdAt))
         .limit(POSTS_PAGE_SIZE + 1)
       return buildPaginatedResult(rows)
@@ -83,6 +87,7 @@ export async function getTimelinePosts(db: Db, cursor?: string) {
   })
     .from(schema.posts)
     .innerJoin(schema.users, eq(schema.posts.userId, schema.users.id))
+    .where(seasonFilter)
     .orderBy(desc(schema.posts.createdAt))
     .limit(POSTS_PAGE_SIZE + 1)
   return buildPaginatedResult(rows)

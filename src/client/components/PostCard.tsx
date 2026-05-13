@@ -11,7 +11,7 @@ export function PostCard({ post, onLike }: PostCardProps) {
   if (post.line5) lines.push(post.line5)
 
   return (
-    <article className="post-card">
+    <article className="post-card" onClick={() => window.location.href = `/posts/${post.id}`} style={{ cursor: 'pointer' }}>
       <div className="post-card-lines">
         {lines.map((line, i) => (
           <span key={i} className="post-line">{line}</span>

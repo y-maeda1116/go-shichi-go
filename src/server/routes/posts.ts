@@ -17,7 +17,8 @@ posts.get('/',
   async (c) => {
     const db = getDb(c.env.DATABASE_URL)
     const cursor = c.req.query('cursor')
-    const result = await queries.getTimelinePosts(db, cursor)
+    const season = c.req.query('season')
+    const result = await queries.getTimelinePosts(db, cursor, season)
 
     const user = c.get('user')
     const dataWithLikes = await Promise.all(
