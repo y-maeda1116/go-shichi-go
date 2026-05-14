@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { PostCard } from '@/client/components/PostCard'
 
 interface UserProfileProps {
   user: {

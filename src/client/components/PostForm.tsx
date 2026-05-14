@@ -69,7 +69,7 @@ export function PostForm({ onSubmit }: PostFormProps) {
         data.line4 = values.line4
         data.line5 = values.line5
       }
-      await onSubmit(data as any)
+      await onSubmit(data as Parameters<typeof onSubmit>[0])
       setValues({ line1: '', line2: '', line3: '', line4: '', line5: '' })
       setExpanded(false)
     } finally {

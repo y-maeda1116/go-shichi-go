@@ -1,4 +1,4 @@
-import { eq, desc, count, and, lt, ilike } from 'drizzle-orm'
+import { eq, desc, count, and, lt } from 'drizzle-orm'
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
 

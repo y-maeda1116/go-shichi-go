@@ -1,5 +1,4 @@
 import type { PostWithAuthor } from '@/types'
-import { PostCard } from '@/client/components/PostCard'
 
 interface PostDetailProps {
   post: PostWithAuthor

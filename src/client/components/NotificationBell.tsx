@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-interface Notification {
+interface NotificationItem {
   id: string
   type: 'like' | 'follow'
   fromUserName: string
@@ -10,7 +10,7 @@ interface Notification {
 }
 
 export function NotificationBell() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<NotificationItem[]>([])
   const [open, setOpen] = useState(false)
   const unread = notifications.filter((n) => !n.read).length
 
@@ -20,14 +20,6 @@ export function NotificationBell() {
       setNotifications(JSON.parse(saved))
     }
   }, [])
-
-  const addNotification = (n: Notification) => {
-    setNotifications((prev) => {
-      const next = [n, ...prev].slice(0, 50)
-      localStorage.setItem('notifications', JSON.stringify(next))
-      return next
-    })
-  }
 
   const markRead = () => {
     setNotifications((prev) => {

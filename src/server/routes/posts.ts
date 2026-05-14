@@ -86,7 +86,7 @@ posts.delete('/:id', authMiddleware, async (c) => {
   const db = getDb(c.env.DATABASE_URL)
 
   const result = await deletePostWithAuth(
-    { createPost: () => Promise.resolve({} as any), deletePost: (id, uid) => queries.deletePost(db, id, uid) },
+    { createPost: () => Promise.resolve({} as Awaited<ReturnType<typeof queries.createPost>>), deletePost: (id, uid) => queries.deletePost(db, id, uid) },
     postId,
     user.id,
   )
