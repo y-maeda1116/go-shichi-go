@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { renderToString } from 'react-dom/server'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Layout } from '@/client/components/Layout'
 import { Timeline } from '@/client/components/Timeline'
 import { ProfileForm } from '@/client/components/ProfileForm'
@@ -17,10 +18,13 @@ const pages = new Hono<{
 }>()
 
 function renderPage(component: React.ReactElement, user?: AuthUser, title?: string, ogImage?: string) {
+  const queryClient = new QueryClient()
   const html = renderToString(
-    <Layout user={user}>
-      {component}
-    </Layout>,
+    <QueryClientProvider client={queryClient}>
+      <Layout user={user}>
+        {component}
+      </Layout>
+    </QueryClientProvider>,
   )
 
   const ogTags = ogImage
