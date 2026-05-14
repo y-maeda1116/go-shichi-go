@@ -1,13 +1,7 @@
 name = "go-shichi-go"
 compatibility_date = "2024-12-01"
 pages_build_output_dir = "./dist"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"
-
-[[r2_buckets]]
-binding = "R2_BUCKET"
-bucket_name = "go-shichi-go-images"
-
-[placement]
-mode = "smart"
