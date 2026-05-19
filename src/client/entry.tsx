@@ -29,8 +29,8 @@ const queryClient = new QueryClient({
 
 const root = document.getElementById('root')
 if (root) {
-  const user = (window as any).__INITIAL_USER__ || null
-  const page = (window as any).__INITIAL_PAGE__ || null
+  const user = (window as unknown as Record<string, unknown>).__INITIAL_USER__ || null
+  const page = (window as unknown as Record<string, unknown>).__INITIAL_PAGE__ || null
 
   let content: ReactNode = null
   if (page === 'timeline') {

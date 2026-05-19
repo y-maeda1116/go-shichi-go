@@ -9,11 +9,6 @@ interface HaikuInput {
   line3: string
 }
 
-interface TankaInput extends HaikuInput {
-  line4: string
-  line5: string
-}
-
 interface PostInput extends HaikuInput {
   line4?: string
   line5?: string
