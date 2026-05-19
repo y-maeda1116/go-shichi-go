@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { usePosts } from '@/client/hooks/usePosts'
 import { PostCard } from '@/client/components/PostCard'
 import { PostForm } from '@/client/components/PostForm'
@@ -16,13 +17,13 @@ const SEASONS = [
 export function Timeline() {
   const [season, setSeason] = useState('')
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = usePosts(season || undefined)
-  const [refreshKey, setRefreshKey] = useState(0)
+  const queryClient = useQueryClient()
 
   const posts = data?.pages.flatMap((page) => page.data) ?? []
 
   const handleLike = async (postId: string) => {
     await fetch('/api/posts/' + postId + '/like', { method: 'POST' })
-    setRefreshKey((k) => k + 1)
+    queryClient.invalidateQueries({ queryKey: ['posts'] })
   }
 
   const handlePost = async (input: {
@@ -37,11 +38,11 @@ export function Timeline() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
     })
-    setRefreshKey((k) => k + 1)
+    queryClient.invalidateQueries({ queryKey: ['posts'] })
   }
 
   return (
-    <div className="timeline" key={refreshKey}>
+    <div className="timeline">
       <PostForm onSubmit={handlePost} />
       <div className="season-filter">
         {SEASONS.map((s) => (

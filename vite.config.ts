@@ -1,6 +1,7 @@
 import pages from '@hono/vite-cloudflare-pages'
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import { readFileSync, writeFileSync, existsSync } from 'fs'
 
 export default defineConfig({
   plugins: [
@@ -15,11 +16,25 @@ export default defineConfig({
         }
       },
     },
+    {
+      name: 'fix-routes-json',
+      writeBundle() {
+        const routesPath = resolve(__dirname, 'dist/_routes.json')
+        if (existsSync(routesPath)) {
+          const routes = JSON.parse(readFileSync(routesPath, 'utf-8'))
+          routes.exclude = ['/client/*', '/fonts/*', '/styles/*', '/favicon.ico']
+          writeFileSync(routesPath, JSON.stringify(routes, null, 2))
+        }
+      },
+    },
   ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
     },
+  },
+  build: {
+    emptyOutDir: false,
   },
   test: {
     environment: 'happy-dom',

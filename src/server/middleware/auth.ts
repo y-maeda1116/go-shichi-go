@@ -7,8 +7,26 @@ type Env = {
   Bindings: { DATABASE_URL: string }
 }
 
+function getEmailFromAccess(c: Context): string | undefined {
+  const headerEmail = c.req.header('Cf-Access-Authenticated-User-Email')
+  if (headerEmail) return headerEmail
+
+  const cookie = c.req.header('cookie') || ''
+  const match = cookie.match(/CF_Authorization=([^;]+)/)
+  if (!match) return undefined
+
+  try {
+    const jwt = match[1]
+    const payload = jwt.split('.')[1]
+    const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')))
+    return decoded.email
+  } catch {
+    return undefined
+  }
+}
+
 export const authMiddleware = createMiddleware<Env>(async (c, next) => {
-  const email = c.req.header('Cf-Access-Authenticated-User-Email')
+  const email = getEmailFromAccess(c)
 
   if (!email) {
     return c.json({ success: false, error: '認証が必要です' }, 401)
@@ -37,7 +55,7 @@ export const authMiddleware = createMiddleware<Env>(async (c, next) => {
 })
 
 export const optionalAuthMiddleware = createMiddleware<Env>(async (c, next) => {
-  const email = c.req.header('Cf-Access-Authenticated-User-Email')
+  const email = getEmailFromAccess(c)
 
   if (email) {
     const { getDb } = await import('@/server/db/client')
@@ -59,5 +77,5 @@ export const optionalAuthMiddleware = createMiddleware<Env>(async (c, next) => {
 })
 
 export function getEmailFromHeader(c: Context): string | undefined {
-  return c.req.header('Cf-Access-Authenticated-User-Email')
+  return getEmailFromAccess(c)
 }

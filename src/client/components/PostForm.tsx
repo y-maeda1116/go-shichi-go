@@ -17,14 +17,14 @@ interface LineField {
 }
 
 const UPPER_LINES: LineField[] = [
-  { label: '上（5文字）', expected: 5, key: 'line1' },
-  { label: '中（7文字）', expected: 7, key: 'line2' },
-  { label: '下（5文字）', expected: 5, key: 'line3' },
+  { label: '上', expected: 5, key: 'line1' },
+  { label: '中', expected: 7, key: 'line2' },
+  { label: '下', expected: 5, key: 'line3' },
 ]
 
 const LOWER_LINES: LineField[] = [
-  { label: '下句上（7文字）', expected: 7, key: 'line4' },
-  { label: '下句下（7文字）', expected: 7, key: 'line5' },
+  { label: '下句上', expected: 7, key: 'line4' },
+  { label: '下句下', expected: 7, key: 'line5' },
 ]
 
 function countChars(text: string): number {
@@ -45,13 +45,10 @@ export function PostForm({ onSubmit }: PostFormProps) {
   }, [])
 
   const isValid = () => {
-    const upperValid = UPPER_LINES.every(
-      (f) => countChars(values[f.key as keyof typeof values]) === f.expected,
-    )
+    const hasContent = (key: string) => countChars(values[key as keyof typeof values]) > 0
+    const upperValid = UPPER_LINES.every((f) => hasContent(f.key))
     if (!hasLowerLines) return upperValid
-    return upperValid && LOWER_LINES.every(
-      (f) => countChars(values[f.key as keyof typeof values]) === f.expected,
-    )
+    return upperValid && LOWER_LINES.every((f) => hasContent(f.key))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +77,6 @@ export function PostForm({ onSubmit }: PostFormProps) {
   const renderLineInput = (field: LineField) => {
     const value = values[field.key as keyof typeof values]
     const charCount = countChars(value)
-    const valid = charCount === field.expected || charCount === 0
 
     return (
       <div key={field.key} className="post-line-input">
@@ -89,11 +85,8 @@ export function PostForm({ onSubmit }: PostFormProps) {
           value={value}
           onChange={(e) => handleChange(field.key, e.target.value)}
           placeholder={field.label}
-          maxLength={field.expected + 2}
         />
-        <span className={`char-count ${charCount > 0 ? (valid ? 'valid' : 'invalid') : ''}`}>
-          {charCount}/{field.expected}
-        </span>
+        <span className="char-count">{charCount}</span>
       </div>
     )
   }

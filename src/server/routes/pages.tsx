@@ -17,7 +17,7 @@ const pages = new Hono<{
   Bindings: { DATABASE_URL: string }
 }>()
 
-function renderPage(component: React.ReactElement, user?: AuthUser, title?: string, ogImage?: string) {
+function renderPage(component: React.ReactElement, user?: AuthUser, title?: string, ogImage?: string, page?: string) {
   const queryClient = new QueryClient()
   const html = renderToString(
     <QueryClientProvider client={queryClient}>
@@ -46,10 +46,12 @@ function renderPage(component: React.ReactElement, user?: AuthUser, title?: stri
   ${ogTags}
   <link rel="stylesheet" href="/styles/vertical.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap">
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
 </head>
 <body>
   <div id="root">${html}</div>
   <script>window.__INITIAL_USER__ = ${user ? JSON.stringify(user) : 'null'};</script>
+  <script>window.__INITIAL_PAGE__ = ${page ? `'${page}'` : 'null'};</script>
   <script src="/client/entry.js"></script>
 </body>
 </html>`
@@ -57,7 +59,7 @@ function renderPage(component: React.ReactElement, user?: AuthUser, title?: stri
 
 pages.get('/', optionalAuthMiddleware, async (c) => {
   const user = c.get('user')
-  const html = renderPage(<Timeline />, user)
+  const html = renderPage(<Timeline />, user, undefined, undefined, 'timeline')
   return c.html(html)
 })
 
@@ -73,7 +75,7 @@ pages.get('/register', async (c) => {
     return c.redirect('/')
   }
 
-  const html = renderPage(<ProfileForm mode="register" email={email} />)
+  const html = renderPage(<ProfileForm mode="register" email={email} />, undefined, 'プロフィール登録 — 五七五', undefined, 'register')
   return c.html(html)
 })
 

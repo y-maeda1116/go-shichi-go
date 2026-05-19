@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler pages dev -- vite",
-    "build": "vite build",
+    "build": "vite build -c vite.config.client.ts && vite build && cp -r public/* dist/",
     "build:client": "vite build --outDir dist/client",
     "preview": "wrangler pages dev dist",
     "test": "vitest run",

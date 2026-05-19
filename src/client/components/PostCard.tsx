@@ -38,10 +38,10 @@ export function PostCard({ post, onLike }: PostCardProps) {
         <img src={post.imageUrl} alt="" className="post-image" />
       )}
       <div className="post-meta">
-        <time>{post.createdAt.toLocaleDateString('ja-JP')}</time>
+        <time>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</time>
         <button
           className={`like-button ${post.likedByMe ? 'liked' : ''}`}
-          onClick={() => onLike(post.id)}
+          onClick={(e) => { e.stopPropagation(); onLike(post.id) }}
         >
           {post.likedByMe ? '♥' : '♡'} {post.likeCount}
         </button>
