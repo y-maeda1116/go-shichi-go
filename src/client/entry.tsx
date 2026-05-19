@@ -2,6 +2,7 @@ import { Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Layout } from '@/client/components/Layout'
+import type { AuthUser } from '@/types'
 import { Timeline } from '@/client/components/Timeline'
 import { ProfileForm } from '@/client/components/ProfileForm'
 
@@ -29,8 +30,8 @@ const queryClient = new QueryClient({
 
 const root = document.getElementById('root')
 if (root) {
-  const user = (window as unknown as Record<string, unknown>).__INITIAL_USER__ || null
-  const page = (window as unknown as Record<string, unknown>).__INITIAL_PAGE__ || null
+  const user = (window as unknown as Record<string, AuthUser | undefined>).__INITIAL_USER__
+  const page = (window as unknown as Record<string, string | undefined>).__INITIAL_PAGE__
 
   let content: ReactNode = null
   if (page === 'timeline') {
