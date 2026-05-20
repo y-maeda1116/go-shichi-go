@@ -42,9 +42,7 @@ export function ProfileForm({ mode, initialData }: ProfileFormProps) {
       const res = await fetch(url, { method, headers, body })
 
       if (res.ok) {
-        if (mode === 'register') {
-          window.location.href = '/'
-        }
+        window.location.href = '/'
       } else {
         const data = await res.json() as { error?: string }
         setError(data.error || 'エラーが発生しました')
