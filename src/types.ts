@@ -42,6 +42,7 @@ export interface AuthUser {
   id: string
   accessEmail: string
   displayName: string
+  bio: string | null
   iconUrl: string | null
 }
 

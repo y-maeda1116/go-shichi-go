@@ -120,7 +120,7 @@ pages.get('/profile/edit', authMiddleware, async (c) => {
       mode="edit"
       initialData={{
         displayName: user.displayName,
-        bio: '',
+        bio: user.bio ?? '',
         iconUrl: user.iconUrl ?? '',
       }}
     />,

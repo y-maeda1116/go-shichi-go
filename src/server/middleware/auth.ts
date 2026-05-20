@@ -48,6 +48,7 @@ export const authMiddleware = createMiddleware<Env>(async (c, next) => {
     id: user.id,
     accessEmail: user.accessEmail,
     displayName: user.displayName,
+    bio: user.bio,
     iconUrl: user.iconUrl,
   })
 
@@ -68,6 +69,7 @@ export const optionalAuthMiddleware = createMiddleware<Env>(async (c, next) => {
         id: user.id,
         accessEmail: user.accessEmail,
         displayName: user.displayName,
+        bio: user.bio,
         iconUrl: user.iconUrl,
       })
     }

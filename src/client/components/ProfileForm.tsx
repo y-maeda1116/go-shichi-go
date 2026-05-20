@@ -39,7 +39,7 @@ export function ProfileForm({ mode, initialData }: ProfileFormProps) {
         body = JSON.stringify({ displayName, bio })
       }
 
-      const res = await fetch(url, { method, headers, body })
+      const res = await fetch(url, { method, headers, body, credentials: 'same-origin' })
 
       if (res.ok) {
         window.location.href = '/'
