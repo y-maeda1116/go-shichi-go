@@ -48,6 +48,19 @@ if (root) {
         <ProfileForm mode="register" />
       </Layout>
     )
+  } else if (page === 'profile-edit') {
+    content = (
+      <Layout user={user}>
+        <ProfileForm
+          mode="edit"
+          initialData={{
+            displayName: user?.displayName ?? '',
+            bio: user?.bio ?? '',
+            iconUrl: user?.iconUrl ?? '',
+          }}
+        />
+      </Layout>
+    )
   }
 
   if (content) {

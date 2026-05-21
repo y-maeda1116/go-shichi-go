@@ -126,6 +126,8 @@ pages.get('/profile/edit', authMiddleware, async (c) => {
     />,
     user,
     'プロフィール編集 — 五七五',
+    undefined,
+    'profile-edit',
   )
   return c.html(html)
 })
