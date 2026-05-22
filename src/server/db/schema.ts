@@ -25,6 +25,8 @@ export const posts = pgTable('posts', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
+export { dailyThemes } from './themes-schema'
+
 export const likes = pgTable('likes', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').notNull().references(() => users.id),
