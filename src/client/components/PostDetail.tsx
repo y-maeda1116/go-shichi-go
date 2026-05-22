@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { ShareImageModal } from '@/client/components/ShareImageModal'
 import type { PostWithAuthor } from '@/types'
 
 interface PostDetailProps {
@@ -5,6 +7,7 @@ interface PostDetailProps {
 }
 
 export function PostDetail({ post }: PostDetailProps) {
+  const [showShare, setShowShare] = useState(false)
   const lines = [post.line1, post.line2, post.line3]
   if (post.line4) lines.push(post.line4)
   if (post.line5) lines.push(post.line5)
@@ -41,6 +44,10 @@ export function PostDetail({ post }: PostDetailProps) {
             >
               {post.likedByMe ? '♥' : '♡'} {post.likeCount}
             </button>
+            <button className="share-button" onClick={() => setShowShare(true)}>
+              ↗ 画像でシェア
+            </button>
+            {showShare && <ShareImageModal postId={post.id} onClose={() => setShowShare(false)} />}
           </div>
         </article>
       </div>

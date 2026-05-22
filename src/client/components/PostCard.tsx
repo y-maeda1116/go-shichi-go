@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { ShareImageModal } from '@/client/components/ShareImageModal'
 import type { PostWithAuthor } from '@/types'
 
 function extractHashtags(text: string): string[] {
@@ -12,6 +14,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, onLike }: PostCardProps) {
+  const [showShare, setShowShare] = useState(false)
   const lines = [post.line1, post.line2, post.line3]
   if (post.line4) lines.push(post.line4)
   if (post.line5) lines.push(post.line5)
@@ -45,6 +48,13 @@ export function PostCard({ post, onLike }: PostCardProps) {
         >
           {post.likedByMe ? '♥' : '♡'} {post.likeCount}
         </button>
+        <button
+          className="share-button"
+          onClick={(e) => { e.stopPropagation(); setShowShare(true) }}
+        >
+          ↗
+        </button>
+        {showShare && <ShareImageModal postId={post.id} onClose={() => setShowShare(false)} />}
       </div>
     </article>
   )
