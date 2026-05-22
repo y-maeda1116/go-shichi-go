@@ -15,6 +15,13 @@
       "when": 1778740649176,
       "tag": "0001_classy_scalphunter",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779447431344,
+      "tag": "0002_abandoned_moira_mactaggert",
+      "breakpoints": true
     }
   ]
 }
