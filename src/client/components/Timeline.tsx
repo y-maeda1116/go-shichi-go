@@ -4,6 +4,7 @@ import { usePosts } from '@/client/hooks/usePosts'
 import { PostCard } from '@/client/components/PostCard'
 import { PostForm } from '@/client/components/PostForm'
 import { TimelineSkeleton } from '@/client/components/Skeleton'
+import { ThemeCard } from '@/client/components/ThemeCard'
 
 const SEASONS = [
   { value: '', label: 'すべて' },
@@ -44,6 +45,7 @@ export function Timeline() {
   return (
     <div className="timeline">
       <PostForm onSubmit={handlePost} />
+      <ThemeCard />
       <div className="season-filter">
         {SEASONS.map((s) => (
           <button
