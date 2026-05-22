@@ -4,6 +4,7 @@ import { cacheMiddleware } from '@/server/middleware/cache'
 import { getDb } from '@/server/db/client'
 import * as queries from '@/server/db/queries'
 import { createPostWithValidation, deletePostWithAuth } from '@/server/services/post.service'
+import { generateShareSvg } from '@/server/utils/share-image'
 import type { AuthUser } from '@/types'
 
 const posts = new Hono<{
@@ -57,6 +58,33 @@ posts.post('/', authMiddleware, async (c) => {
     return c.json(result, 400)
   }
   return c.json(result, 201)
+})
+
+posts.get('/:id/share-image', cacheMiddleware(86400), optionalAuthMiddleware, async (c) => {
+  const db = getDb(c.env.DATABASE_URL)
+  const postId = c.req.param('id')
+  const style = c.req.query('style') === 'modern' ? 'modern' : 'washi'
+
+  const row = await queries.getPostById(db, postId)
+  if (!row) {
+    return c.json({ success: false, error: '投稿が見つかりません' }, 404)
+  }
+
+  const svg = generateShareSvg({
+    line1: row.post.line1,
+    line2: row.post.line2,
+    line3: row.post.line3,
+    line4: row.post.line4,
+    line5: row.post.line5,
+    author: row.author.displayName,
+    type: row.post.type as 'haiku' | 'tanka',
+    style,
+  })
+
+  return c.body(svg, 200, {
+    'Content-Type': 'image/svg+xml',
+    'Cache-Control': 'public, max-age=86400',
+  })
 })
 
 posts.get('/:id', cacheMiddleware(60), optionalAuthMiddleware, async (c) => {
