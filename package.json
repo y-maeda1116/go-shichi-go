@@ -13,7 +13,8 @@
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed-themes": "npx tsx scripts/seed-themes.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
