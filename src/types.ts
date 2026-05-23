@@ -100,3 +100,14 @@ export interface Notification {
   createdAt: Date
   read: boolean
 }
+
+export interface Reply {
+  id: string
+  postId: string
+  userId: string
+  line1: string
+  line2: string
+  line3: string
+  createdAt: Date
+  author: Pick<User, 'id' | 'displayName' | 'iconUrl'>
+}

@@ -759,6 +759,29 @@ body {
   color: var(--color-accent);
 }
 
+/* Reply */
+.reply-form {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.reply-list {
+  margin-top: 16px;
+}
+
+.reply-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.reply-card .post-card-lines {
+  min-height: auto;
+}
+
 /* Share Button & Modal */
 .share-button {
   background: none;

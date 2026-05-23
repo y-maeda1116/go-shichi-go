@@ -7,6 +7,7 @@ import usersRoutes from '@/server/routes/users'
 import uploadRoutes from '@/server/routes/upload'
 import followRoutes from '@/server/routes/follow'
 import themesRoutes from '@/server/routes/themes'
+import repliesRoutes from '@/server/routes/replies'
 import ogpRoutes from '@/server/routes/ogp'
 import pagesRoutes from '@/server/routes/pages'
 
@@ -21,6 +22,7 @@ app.route('/api/users', usersRoutes)
 app.route('/api/upload', uploadRoutes)
 app.route('/api/follow', followRoutes)
 app.route('/api/themes', themesRoutes)
+app.route('/api/replies', repliesRoutes)
 app.route('/ogp', ogpRoutes)
 
 app.onError(errorHandler)

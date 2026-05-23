@@ -1,8 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PostDetail } from '@/client/components/PostDetail'
 import type { PostWithAuthor } from '@/types'
+
+const queryClient = new QueryClient()
+
+function wrap(component: React.ReactElement) {
+  return <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+}
 
 const mockHaiku: PostWithAuthor = {
   id: 'p1',
@@ -30,7 +37,7 @@ describe('PostDetail', () => {
   })
 
   it('renders all haiku lines', () => {
-    const { container } = render(<PostDetail post={mockHaiku} />)
+    const { container } = render(wrap(<PostDetail post={mockHaiku} />))
     expect(container.textContent).toContain('古池や')
     expect(container.textContent).toContain('蛙飛び込む')
     expect(container.textContent).toContain('水の音')
@@ -43,18 +50,18 @@ describe('PostDetail', () => {
       line4: '静けさや',
       line5: '岩にしみ入る',
     }
-    const { container } = render(<PostDetail post={tanka} />)
+    const { container } = render(wrap(<PostDetail post={tanka} />))
     expect(container.textContent).toContain('静けさや')
     expect(container.textContent).toContain('岩にしみ入る')
   })
 
   it('renders season word when present', () => {
-    const { container } = render(<PostDetail post={{ ...mockHaiku, seasonWord: '春' }} />)
+    const { container } = render(wrap(<PostDetail post={{ ...mockHaiku, seasonWord: '春' }} />))
     expect(container.textContent).toContain('春')
   })
 
   it('renders author note when present', () => {
-    const { container } = render(<PostDetail post={{ ...mockHaiku, authorNote: 'メモ' }} />)
+    const { container } = render(wrap(<PostDetail post={{ ...mockHaiku, authorNote: 'メモ' }} />))
     expect(container.textContent).toContain('メモ')
   })
 
@@ -63,7 +70,7 @@ describe('PostDetail', () => {
     globalThis.fetch = fetchSpy
     Object.defineProperty(window, 'location', { value: { reload: vi.fn() }, writable: true })
 
-    const { container } = render(<PostDetail post={mockHaiku} />)
+    const { container } = render(wrap(<PostDetail post={mockHaiku} />))
     const reactionBtn = container.querySelector('.reaction-btn') as HTMLElement
     await userEvent.click(reactionBtn)
 

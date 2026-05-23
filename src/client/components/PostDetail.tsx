@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { ShareImageModal } from '@/client/components/ShareImageModal'
 import { ReactionButtons } from '@/client/components/ReactionButtons'
+import { ReplyForm } from '@/client/components/ReplyForm'
+import { ReplyList } from '@/client/components/ReplyList'
 import type { PostWithAuthor, ReactionType } from '@/types'
 
 interface PostDetailProps {
@@ -66,6 +68,8 @@ export function PostDetail({ post }: PostDetailProps) {
         </div>
         <a href="/" className="btn-back">タイムラインに戻る</a>
       </div>
+      <ReplyForm postId={post.id} onSubmitted={() => window.location.reload()} />
+      <ReplyList postId={post.id} />
     </div>
   )
 }

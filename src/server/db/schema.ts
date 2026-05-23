@@ -26,6 +26,7 @@ export const posts = pgTable('posts', {
 })
 
 export { dailyThemes } from './themes-schema'
+export { replies } from './replies-schema'
 
 export const likes = pgTable('likes', {
   id: uuid('id').defaultRandom().primaryKey(),
