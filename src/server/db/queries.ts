@@ -1,4 +1,4 @@
-import { eq, desc, count, and, lt, sql } from 'drizzle-orm'
+import { eq, desc, count, and, lt, sql, inArray } from 'drizzle-orm'
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
 import type { ReactionType } from '@/types'
@@ -242,7 +242,7 @@ export async function getReactionsBatch(db: Db, postIds: string[]): Promise<Map<
     count: count(),
   })
     .from(schema.likes)
-    .where(sql`${schema.likes.postId} IN ${postIds}`)
+    .where(inArray(schema.likes.postId, postIds))
     .groupBy(schema.likes.postId, schema.likes.reactionType)
 
   const map = new Map<string, Partial<Record<ReactionType, number>>>()
@@ -262,7 +262,7 @@ export async function getUserReactionsBatch(db: Db, userId: string, postIds: str
     reactionType: schema.likes.reactionType,
   })
     .from(schema.likes)
-    .where(and(eq(schema.likes.userId, userId), sql`${schema.likes.postId} IN ${postIds}`))
+    .where(and(eq(schema.likes.userId, userId), inArray(schema.likes.postId, postIds)))
 
   const map = new Map<string, ReactionType>()
   for (const row of rows) {
