@@ -19,23 +19,25 @@ const mockHaiku: PostWithAuthor = {
   author: { id: 'u1', displayName: '芭蕉', iconUrl: null },
   likeCount: 5,
   likedByMe: false,
+  reactions: { heart: 5 },
+  myReaction: null,
 }
 
 describe('PostCard', () => {
   it('renders haiku lines vertically', () => {
-    const { container } = render(<PostCard post={mockHaiku} onLike={() => {}} />)
+    const { container } = render(<PostCard post={mockHaiku} onReact={() => {}} />)
     expect(container.textContent).toContain('古池や')
     expect(container.textContent).toContain('蛙飛び込む')
     expect(container.textContent).toContain('水の音')
   })
 
   it('renders author name', () => {
-    const { container } = render(<PostCard post={mockHaiku} onLike={() => {}} />)
+    const { container } = render(<PostCard post={mockHaiku} onReact={() => {}} />)
     expect(container.textContent).toContain('芭蕉')
   })
 
   it('renders like count', () => {
-    const { container } = render(<PostCard post={mockHaiku} onLike={() => {}} />)
+    const { container } = render(<PostCard post={mockHaiku} onReact={() => {}} />)
     expect(container.textContent).toContain('5')
   })
 
@@ -46,7 +48,7 @@ describe('PostCard', () => {
       line4: '静けさや',
       line5: '岩にしみ入る',
     }
-    const { container } = render(<PostCard post={tanka} onLike={() => {}} />)
+    const { container } = render(<PostCard post={tanka} onReact={() => {}} />)
     expect(container.textContent).toContain('静けさや')
     expect(container.textContent).toContain('岩にしみ入る')
   })

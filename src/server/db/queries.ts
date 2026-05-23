@@ -1,6 +1,7 @@
-import { eq, desc, count, and, lt } from 'drizzle-orm'
+import { eq, desc, count, and, lt, sql } from 'drizzle-orm'
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
+import type { ReactionType } from '@/types'
 
 type Db = NeonHttpDatabase<typeof schema>
 
@@ -198,6 +199,46 @@ export async function toggleLike(db: Db, userId: string, postId: string): Promis
 
   await db.insert(schema.likes).values({ userId, postId })
   return 'liked'
+}
+
+export async function toggleReaction(db: Db, userId: string, postId: string, reactionType: ReactionType): Promise<{ action: 'added' | 'removed'; reactionType: ReactionType }> {
+  const existing = await db.select()
+    .from(schema.likes)
+    .where(and(eq(schema.likes.userId, userId), eq(schema.likes.postId, postId)))
+    .limit(1)
+
+  if (existing.length > 0) {
+    await db.delete(schema.likes)
+      .where(and(eq(schema.likes.userId, userId), eq(schema.likes.postId, postId)))
+    return { action: 'removed', reactionType }
+  }
+
+  await db.insert(schema.likes).values({ userId, postId, reactionType })
+  return { action: 'added', reactionType }
+}
+
+export async function getReactions(db: Db, postId: string): Promise<Partial<Record<ReactionType, number>>> {
+  const rows = await db.select({
+    reactionType: schema.likes.reactionType,
+    count: count(),
+  })
+    .from(schema.likes)
+    .where(eq(schema.likes.postId, postId))
+    .groupBy(schema.likes.reactionType)
+
+  const result: Partial<Record<ReactionType, number>> = {}
+  for (const row of rows) {
+    result[row.reactionType as ReactionType] = row.count
+  }
+  return result
+}
+
+export async function getUserReaction(db: Db, userId: string, postId: string): Promise<ReactionType | null> {
+  const rows = await db.select({ reactionType: schema.likes.reactionType })
+    .from(schema.likes)
+    .where(and(eq(schema.likes.userId, userId), eq(schema.likes.postId, postId)))
+    .limit(1)
+  return rows[0]?.reactionType as ReactionType ?? null
 }
 
 export async function hasUserLiked(db: Db, userId: string, postId: string) {

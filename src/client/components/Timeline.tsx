@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePosts } from '@/client/hooks/usePosts'
 import { PostCard } from '@/client/components/PostCard'
+import type { ReactionType } from '@/types'
 import { PostForm } from '@/client/components/PostForm'
 import { TimelineSkeleton } from '@/client/components/Skeleton'
 import { ThemeCard } from '@/client/components/ThemeCard'
@@ -22,8 +23,12 @@ export function Timeline() {
 
   const posts = data?.pages.flatMap((page) => page.data) ?? []
 
-  const handleLike = async (postId: string) => {
-    await fetch('/api/posts/' + postId + '/like', { method: 'POST' })
+  const handleReact = async (postId: string, reactionType: ReactionType) => {
+    await fetch('/api/posts/' + postId + '/react', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reactionType }),
+    })
     queryClient.invalidateQueries({ queryKey: ['posts'] })
   }
 
@@ -65,7 +70,7 @@ export function Timeline() {
             <p className="empty-message">投稿がありません</p>
           )}
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} onLike={handleLike} />
+            <PostCard key={post.id} post={post} onReact={handleReact} />
           ))}
         </div>
       )}

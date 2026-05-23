@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ShareImageModal } from '@/client/components/ShareImageModal'
-import type { PostWithAuthor } from '@/types'
+import { ReactionButtons } from '@/client/components/ReactionButtons'
+import type { PostWithAuthor, ReactionType } from '@/types'
 
 function extractHashtags(text: string): string[] {
   const matches = text.match(/#([^\s#]+)/g)
@@ -10,10 +11,10 @@ function extractHashtags(text: string): string[] {
 
 interface PostCardProps {
   post: PostWithAuthor
-  onLike: (postId: string) => void
+  onReact: (postId: string, type: ReactionType) => void
 }
 
-export function PostCard({ post, onLike }: PostCardProps) {
+export function PostCard({ post, onReact }: PostCardProps) {
   const [showShare, setShowShare] = useState(false)
   const lines = [post.line1, post.line2, post.line3]
   if (post.line4) lines.push(post.line4)
@@ -42,12 +43,11 @@ export function PostCard({ post, onLike }: PostCardProps) {
       )}
       <div className="post-meta">
         <time>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</time>
-        <button
-          className={`like-button ${post.likedByMe ? 'liked' : ''}`}
-          onClick={(e) => { e.stopPropagation(); onLike(post.id) }}
-        >
-          {post.likedByMe ? '♥' : '♡'} {post.likeCount}
-        </button>
+        <ReactionButtons
+          reactions={post.reactions ?? {}}
+          myReaction={post.myReaction ?? null}
+          onReact={(type) => onReact(post.id, type)}
+        />
         <button
           className="share-button"
           onClick={(e) => { e.stopPropagation(); setShowShare(true) }}

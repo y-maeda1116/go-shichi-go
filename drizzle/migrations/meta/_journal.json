@@ -22,6 +22,13 @@
       "when": 1779447431344,
       "tag": "0002_abandoned_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779495165221,
+      "tag": "0003_wealthy_cobalt_man",
+      "breakpoints": true
     }
   ]
 }

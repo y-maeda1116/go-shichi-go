@@ -20,6 +20,8 @@ const mockHaiku: PostWithAuthor = {
   author: { id: 'u1', displayName: '芭蕉', iconUrl: null },
   likeCount: 5,
   likedByMe: false,
+  reactions: { heart: 5 },
+  myReaction: null,
 }
 
 describe('PostDetail', () => {
@@ -56,15 +58,15 @@ describe('PostDetail', () => {
     expect(container.textContent).toContain('メモ')
   })
 
-  it('calls like API on button click', async () => {
+  it('calls react API on reaction button click', async () => {
     const fetchSpy = vi.fn().mockResolvedValue({ ok: true })
     globalThis.fetch = fetchSpy
     Object.defineProperty(window, 'location', { value: { reload: vi.fn() }, writable: true })
 
     const { container } = render(<PostDetail post={mockHaiku} />)
-    const likeButton = container.querySelector('.like-button') as HTMLElement
-    await userEvent.click(likeButton)
+    const reactionBtn = container.querySelector('.reaction-btn') as HTMLElement
+    await userEvent.click(reactionBtn)
 
-    expect(fetchSpy).toHaveBeenCalledWith('/api/posts/p1/like', expect.objectContaining({ method: 'POST' }))
+    expect(fetchSpy).toHaveBeenCalledWith('/api/posts/p1/react', expect.objectContaining({ method: 'POST' }))
   })
 })

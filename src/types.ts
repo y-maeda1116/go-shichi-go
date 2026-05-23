@@ -10,6 +10,16 @@ export interface User {
 
 export type PostType = 'haiku' | 'tanka'
 
+export type ReactionType = 'heart' | 'aware' | 'okashi' | 'zabuton' | 'clap'
+
+export const REACTION_LABELS: Record<ReactionType, string> = {
+  heart: '♡',
+  aware: 'あはれ',
+  okashi: 'をかし',
+  zabuton: '座布団',
+  clap: '拍手',
+}
+
 export interface Post {
   id: string
   userId: string
@@ -29,6 +39,8 @@ export interface PostWithAuthor extends Post {
   author: Pick<User, 'id' | 'displayName' | 'iconUrl'>
   likeCount: number
   likedByMe: boolean
+  reactions: Partial<Record<ReactionType, number>>
+  myReaction: ReactionType | null
 }
 
 export interface Like {

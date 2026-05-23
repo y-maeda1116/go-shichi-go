@@ -5,7 +5,7 @@ import { getDb } from '@/server/db/client'
 import * as queries from '@/server/db/queries'
 import { createPostWithValidation, deletePostWithAuth } from '@/server/services/post.service'
 import { generateShareSvg } from '@/server/utils/share-image'
-import type { AuthUser } from '@/types'
+import type { AuthUser, ReactionType } from '@/types'
 
 const posts = new Hono<{
   Variables: { user: AuthUser }
@@ -28,11 +28,17 @@ posts.get('/',
         const likedByMe = user
           ? await queries.hasUserLiked(db, user.id, row.post.id)
           : false
+        const reactions = await queries.getReactions(db, row.post.id)
+        const myReaction = user
+          ? await queries.getUserReaction(db, user.id, row.post.id)
+          : null
         return {
           ...row.post,
           author: row.author,
           likeCount,
           likedByMe,
+          reactions,
+          myReaction,
         }
       }),
     )
@@ -101,10 +107,14 @@ posts.get('/:id', cacheMiddleware(60), optionalAuthMiddleware, async (c) => {
   const likedByMe = user
     ? await queries.hasUserLiked(db, user.id, postId)
     : false
+  const reactions = await queries.getReactions(db, postId)
+  const myReaction = user
+    ? await queries.getUserReaction(db, user.id, postId)
+    : null
 
   return c.json({
     success: true,
-    data: { ...row.post, author: row.author, likeCount, likedByMe },
+    data: { ...row.post, author: row.author, likeCount, likedByMe, reactions, myReaction },
   })
 })
 
@@ -132,6 +142,21 @@ posts.post('/:id/like', authMiddleware, async (c) => {
 
   const action = await queries.toggleLike(db, user.id, postId)
   return c.json({ success: true, data: { action } })
+})
+
+posts.post('/:id/react', authMiddleware, async (c) => {
+  const user = c.get('user')
+  const postId = c.req.param('id')
+  const db = getDb(c.env.DATABASE_URL)
+  const body = await c.req.json() as { reactionType: string }
+  const reactionType = (body.reactionType ?? 'heart') as ReactionType
+  const validTypes: ReactionType[] = ['heart', 'aware', 'okashi', 'zabuton', 'clap']
+  if (!validTypes.includes(reactionType)) {
+    return c.json({ success: false, error: 'Invalid reaction type' }, 400)
+  }
+
+  const result = await queries.toggleReaction(db, user.id, postId, reactionType)
+  return c.json({ success: true, data: result })
 })
 
 export default posts

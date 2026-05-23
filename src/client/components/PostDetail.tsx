@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ShareImageModal } from '@/client/components/ShareImageModal'
-import type { PostWithAuthor } from '@/types'
+import { ReactionButtons } from '@/client/components/ReactionButtons'
+import type { PostWithAuthor, ReactionType } from '@/types'
 
 interface PostDetailProps {
   post: PostWithAuthor
@@ -12,8 +13,12 @@ export function PostDetail({ post }: PostDetailProps) {
   if (post.line4) lines.push(post.line4)
   if (post.line5) lines.push(post.line5)
 
-  const handleLike = async () => {
-    await fetch('/api/posts/' + post.id + '/like', { method: 'POST' })
+  const handleReact = async (type: ReactionType) => {
+    await fetch('/api/posts/' + post.id + '/react', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reactionType: type }),
+    })
     window.location.reload()
   }
 
@@ -38,12 +43,11 @@ export function PostDetail({ post }: PostDetailProps) {
           )}
           <div className="post-meta">
             <time>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</time>
-            <button
-              className={`like-button ${post.likedByMe ? 'liked' : ''}`}
-              onClick={handleLike}
-            >
-              {post.likedByMe ? '♥' : '♡'} {post.likeCount}
-            </button>
+            <ReactionButtons
+              reactions={post.reactions ?? {}}
+              myReaction={post.myReaction ?? null}
+              onReact={handleReact}
+            />
             <button className="share-button" onClick={() => setShowShare(true)}>
               ↗ 画像でシェア
             </button>

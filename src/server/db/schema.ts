@@ -31,6 +31,7 @@ export const likes = pgTable('likes', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').notNull().references(() => users.id),
   postId: uuid('post_id').notNull().references(() => posts.id),
+  reactionType: text('reaction_type').notNull().default('heart'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => [
   uniqueIndex('likes_user_post_unique').on(table.userId, table.postId),

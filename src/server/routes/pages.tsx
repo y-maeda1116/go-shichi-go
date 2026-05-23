@@ -173,12 +173,18 @@ pages.get('/posts/:id', optionalAuthMiddleware, async (c) => {
   const likedByMe = currentUser
     ? await queries.hasUserLiked(db, currentUser.id, postId)
     : false
+  const reactions = await queries.getReactions(db, postId)
+  const myReaction = currentUser
+    ? await queries.getUserReaction(db, currentUser.id, postId)
+    : null
 
   const post = {
     ...row.post,
     author: row.author,
     likeCount,
     likedByMe,
+    reactions,
+    myReaction,
   }
 
   const html = renderPage(
