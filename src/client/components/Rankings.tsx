@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
+interface RankedPost {
+  id: string
+  line1: string
+  line2: string
+  line3: string
+  likeCount: number
+  author: { displayName: string }
+}
+
 export function Rankings() {
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('weekly')
   const { data: posts, isLoading } = useQuery({
@@ -8,7 +17,7 @@ export function Rankings() {
     queryFn: async () => {
       const res = await fetch(`/api/rankings/${period}`)
       if (!res.ok) throw new Error('Failed to fetch rankings')
-      const json = await res.json() as { success: boolean; data: any[] }
+      const json = await res.json() as { success: boolean; data: RankedPost[] }
       return json.data
     },
   })
@@ -36,7 +45,7 @@ export function Rankings() {
         <p className="empty-message">まだ投稿がありません</p>
       ) : (
         <div className="rankings-list">
-          {posts.map((post: any, i: number) => (
+          {posts.map((post, i) => (
             <a key={post.id} href={`/posts/${post.id}`} className="ranking-item">
               <span className="ranking-rank">{i + 1}</span>
               <span className="ranking-lines">

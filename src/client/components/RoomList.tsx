@@ -1,5 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
+interface Room {
+  id: string
+  status: string
+  creator: { displayName: string }
+  lineCount: number
+}
+
 export function RoomList() {
   const queryClient = useQueryClient()
   const { data: rooms, isLoading } = useQuery({
@@ -7,7 +14,7 @@ export function RoomList() {
     queryFn: async () => {
       const res = await fetch('/api/rooms')
       if (!res.ok) throw new Error('Failed to fetch rooms')
-      const json = await res.json() as { success: boolean; data: any[] }
+      const json = await res.json() as { success: boolean; data: Room[] }
       return json.data
     },
   })
@@ -29,7 +36,7 @@ export function RoomList() {
         <p className="empty-message">アクティブな座はありません</p>
       ) : (
         <div className="rooms-list">
-          {rooms.map((room: any) => (
+          {rooms.map((room) => (
             <a key={room.id} href={`/rooms/${room.id}`} className="room-card">
               <span className="room-status">{room.status === 'active' ? '進行中' : '終了'}</span>
               <span className="room-creator">{room.creator.displayName}</span>

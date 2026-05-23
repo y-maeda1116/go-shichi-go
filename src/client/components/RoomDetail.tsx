@@ -1,6 +1,19 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
+interface RoomLine {
+  id: string
+  lineNumber: number
+  line: string
+  author: { displayName: string }
+}
+
+interface RoomData {
+  id: string
+  status: string
+  lines: RoomLine[]
+}
+
 interface RoomDetailProps {
   roomId: string
 }
@@ -15,7 +28,7 @@ export function RoomDetail({ roomId }: RoomDetailProps) {
     queryFn: async () => {
       const res = await fetch(`/api/rooms/${roomId}`)
       if (!res.ok) throw new Error('Failed to fetch room')
-      const json = await res.json() as { success: boolean; data: any }
+      const json = await res.json() as { success: boolean; data: RoomData }
       return json.data
     },
     refetchInterval: 5000,
@@ -50,7 +63,7 @@ export function RoomDetail({ roomId }: RoomDetailProps) {
       </h2>
 
       <div className="room-lines-display">
-        {room.lines.map((l: any) => (
+        {room.lines.map((l) => (
           <div key={l.id} className="room-line">
             <span className="room-line-number">{l.lineNumber}</span>
             <span className="room-line-text">{l.line}</span>
