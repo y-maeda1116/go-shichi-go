@@ -13,40 +13,49 @@ const posts = new Hono<{
 }>()
 
 posts.get('/',
-  cacheMiddleware(30, 60),
   optionalAuthMiddleware,
   async (c) => {
-    const db = getDb(c.env.DATABASE_URL)
-    const cursor = c.req.query('cursor')
-    const season = c.req.query('season')
-    const result = await queries.getTimelinePosts(db, cursor, season)
+    try {
+      const db = getDb(c.env.DATABASE_URL)
+      const cursor = c.req.query('cursor')
+      const season = c.req.query('season')
 
-    const user = c.get('user')
-    const postIds = result.data.map(r => r.post.id)
+      const result = await queries.getTimelinePosts(db, cursor, season)
 
-    const [reactionsMap, myReactionsMap] = await Promise.all([
-      queries.getReactionsBatch(db, postIds),
-      user ? queries.getUserReactionsBatch(db, user.id, postIds) : Promise.resolve(new Map()),
-    ])
+      const user = c.get('user')
+      const postIds = result.data.map(r => r.post.id)
 
-    const dataWithLikes = await Promise.all(
-      result.data.map(async (row) => {
-        const likeCount = await queries.getLikeCount(db, row.post.id)
-        return {
-          ...row.post,
-          author: row.author,
-          likeCount,
-          likedByMe: myReactionsMap.has(row.post.id),
-          reactions: reactionsMap.get(row.post.id) ?? {},
-          myReaction: myReactionsMap.get(row.post.id) ?? null,
-        }
-      }),
-    )
+      const [reactionsMap, myReactionsMap] = await Promise.all([
+        queries.getReactionsBatch(db, postIds),
+        user ? queries.getUserReactionsBatch(db, user.id, postIds) : Promise.resolve(new Map()),
+      ])
 
-    return c.json({
-      success: true,
-      data: { data: dataWithLikes, nextCursor: result.nextCursor },
-    })
+      const dataWithLikes = await Promise.all(
+        result.data.map(async (row) => {
+          const likeCount = await queries.getLikeCount(db, row.post.id)
+          return {
+            ...row.post,
+            author: row.author,
+            likeCount,
+            likedByMe: myReactionsMap.has(row.post.id),
+            reactions: reactionsMap.get(row.post.id) ?? {},
+            myReaction: myReactionsMap.get(row.post.id) ?? null,
+          }
+        }),
+      )
+
+      return c.json({
+        success: true,
+        data: { data: dataWithLikes, nextCursor: result.nextCursor },
+      })
+    } catch (error) {
+      console.error('Timeline error:', error)
+      return c.json({
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      }, 500)
+    }
   },
 )
 
