@@ -22,23 +22,23 @@ posts.get('/',
     const result = await queries.getTimelinePosts(db, cursor, season)
 
     const user = c.get('user')
+    const postIds = result.data.map(r => r.post.id)
+
+    const [reactionsMap, myReactionsMap] = await Promise.all([
+      queries.getReactionsBatch(db, postIds),
+      user ? queries.getUserReactionsBatch(db, user.id, postIds) : Promise.resolve(new Map()),
+    ])
+
     const dataWithLikes = await Promise.all(
       result.data.map(async (row) => {
         const likeCount = await queries.getLikeCount(db, row.post.id)
-        const likedByMe = user
-          ? await queries.hasUserLiked(db, user.id, row.post.id)
-          : false
-        const reactions = await queries.getReactions(db, row.post.id)
-        const myReaction = user
-          ? await queries.getUserReaction(db, user.id, row.post.id)
-          : null
         return {
           ...row.post,
           author: row.author,
           likeCount,
-          likedByMe,
-          reactions,
-          myReaction,
+          likedByMe: myReactionsMap.has(row.post.id),
+          reactions: reactionsMap.get(row.post.id) ?? {},
+          myReaction: myReactionsMap.get(row.post.id) ?? null,
         }
       }),
     )

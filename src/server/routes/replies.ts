@@ -31,7 +31,16 @@ replies.post('/:postId/replies', authMiddleware, async (c) => {
     return c.json({ success: false, error: '三行すべて入力してください' }, 400)
   }
 
+  if (body.line1.length > 20 || body.line2.length > 20 || body.line3.length > 20) {
+    return c.json({ success: false, error: '各行は20文字以内で入力してください' }, 400)
+  }
+
   const db = getDb(c.env.DATABASE_URL)
+
+  const post = await queries.getPostById(db, postId)
+  if (!post) {
+    return c.json({ success: false, error: '投稿が見つかりません' }, 404)
+  }
   const reply = await queries.createReply(db, {
     postId,
     userId: user.id,

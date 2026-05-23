@@ -77,7 +77,13 @@ rooms.post('/:id/lines', authMiddleware, async (c) => {
     return c.json({ success: false, error: 'このルームは5行で完成しています' }, 400)
   }
 
-  const line = await queries.addRoomLine(db, roomId, user.id, body.line, lineNumber)
+  const latestLines = await queries.getRoomLines(db, roomId)
+  const actualLineNumber = latestLines.length + 1
+  if (actualLineNumber > 5) {
+    return c.json({ success: false, error: 'このルームは5行で完成しています' }, 400)
+  }
+
+  const line = await queries.addRoomLine(db, roomId, user.id, body.line, actualLineNumber)
   return c.json({ success: true, data: line }, 201)
 })
 
