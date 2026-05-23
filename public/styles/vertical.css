@@ -782,6 +782,73 @@ body {
   min-height: auto;
 }
 
+/* Streak Badge */
+.streak-badge {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.streak-current {
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+.streak-rank {
+  color: var(--color-text-secondary);
+}
+
+/* Rankings */
+.rankings {
+  max-width: 960px;
+}
+
+.rankings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.ranking-item:hover {
+  border-color: var(--color-accent);
+}
+
+.ranking-rank {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-accent);
+  min-width: 30px;
+  text-align: center;
+}
+
+.ranking-lines {
+  flex: 1;
+  font-family: var(--font-mincho);
+}
+
+.ranking-author {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.ranking-likes {
+  font-size: 13px;
+  color: var(--color-accent);
+}
+
 /* Share Button & Modal */
 .share-button {
   background: none;

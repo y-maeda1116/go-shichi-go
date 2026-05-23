@@ -6,6 +6,7 @@ import { Timeline } from '@/client/components/Timeline'
 import { ProfileForm } from '@/client/components/ProfileForm'
 import { UserProfile } from '@/client/components/UserProfile'
 import { PostDetail } from '@/client/components/PostDetail'
+import { Rankings } from '@/client/components/Rankings'
 import { authMiddleware, optionalAuthMiddleware, getEmailFromHeader } from '@/server/middleware/auth'
 import { getDb } from '@/server/db/client'
 import * as queries from '@/server/db/queries'
@@ -193,6 +194,12 @@ pages.get('/posts/:id', optionalAuthMiddleware, async (c) => {
     `${post.line1}${post.line2}${post.line3} — 五七五`,
     `/ogp/posts/${postId}`,
   )
+  return c.html(html)
+})
+
+pages.get('/rankings', optionalAuthMiddleware, async (c) => {
+  const user = c.get('user')
+  const html = renderPage(<Rankings />, user, '秀句ランキング — 五七五', undefined, 'rankings')
   return c.html(html)
 })
 

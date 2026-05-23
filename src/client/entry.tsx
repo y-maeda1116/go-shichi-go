@@ -5,6 +5,7 @@ import { Layout } from '@/client/components/Layout'
 import type { AuthUser } from '@/types'
 import { Timeline } from '@/client/components/Timeline'
 import { ProfileForm } from '@/client/components/ProfileForm'
+import { Rankings } from '@/client/components/Rankings'
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
   state = { error: null as string | null }
@@ -60,6 +61,14 @@ if (root) {
           }}
         />
       </Layout>
+    )
+  } else if (page === 'rankings') {
+    content = (
+      <QueryClientProvider client={queryClient}>
+        <Layout user={user}>
+          <Rankings />
+        </Layout>
+      </QueryClientProvider>
     )
   }
 

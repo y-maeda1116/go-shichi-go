@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { StreakBadge } from '@/client/components/StreakBadge'
+import { useStreak } from '@/client/hooks/useStreak'
 
 interface UserProfileProps {
   user: {
@@ -16,6 +18,7 @@ interface UserProfileProps {
 export function UserProfile({ user, isOwn, initialFollowing, followerCount, followingCount }: UserProfileProps) {
   const [following, setFollowing] = useState(initialFollowing ?? false)
   const [followers, setFollowers] = useState(followerCount ?? 0)
+  const { data: streak } = useStreak(user.id)
 
   const handleFollow = async () => {
     if (following) {
@@ -38,6 +41,7 @@ export function UserProfile({ user, isOwn, initialFollowing, followerCount, foll
         <div className="profile-info">
           <h1 className="profile-display-name">{user.displayName}</h1>
           {user.bio && <p className="profile-bio">{user.bio}</p>}
+          {streak && <StreakBadge currentStreak={streak.currentStreak} maxStreak={streak.maxStreak} />}
           <div className="profile-stats">
             <span className="stat"><strong>{followers}</strong> フォロワー</span>
             {followingCount !== undefined && (
