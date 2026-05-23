@@ -6,6 +6,8 @@ import type { AuthUser } from '@/types'
 import { Timeline } from '@/client/components/Timeline'
 import { ProfileForm } from '@/client/components/ProfileForm'
 import { Rankings } from '@/client/components/Rankings'
+import { RoomList } from '@/client/components/RoomList'
+import { RoomDetail } from '@/client/components/RoomDetail'
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
   state = { error: null as string | null }
@@ -67,6 +69,22 @@ if (root) {
       <QueryClientProvider client={queryClient}>
         <Layout user={user}>
           <Rankings />
+        </Layout>
+      </QueryClientProvider>
+    )
+  } else if (page === 'rooms') {
+    content = (
+      <QueryClientProvider client={queryClient}>
+        <Layout user={user}>
+          <RoomList />
+        </Layout>
+      </QueryClientProvider>
+    )
+  } else if (page === 'room-detail') {
+    content = (
+      <QueryClientProvider client={queryClient}>
+        <Layout user={user}>
+          <RoomDetail roomId={window.location.pathname.split('/rooms/')[1]} />
         </Layout>
       </QueryClientProvider>
     )

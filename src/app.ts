@@ -9,6 +9,7 @@ import followRoutes from '@/server/routes/follow'
 import themesRoutes from '@/server/routes/themes'
 import repliesRoutes from '@/server/routes/replies'
 import rankingsRoutes from '@/server/routes/rankings'
+import roomsRoutes from '@/server/routes/rooms'
 import ogpRoutes from '@/server/routes/ogp'
 import pagesRoutes from '@/server/routes/pages'
 
@@ -25,6 +26,7 @@ app.route('/api/follow', followRoutes)
 app.route('/api/themes', themesRoutes)
 app.route('/api/replies', repliesRoutes)
 app.route('/api/rankings', rankingsRoutes)
+app.route('/api/rooms', roomsRoutes)
 app.route('/ogp', ogpRoutes)
 
 app.onError(errorHandler)

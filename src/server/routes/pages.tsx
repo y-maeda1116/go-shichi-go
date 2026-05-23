@@ -7,6 +7,8 @@ import { ProfileForm } from '@/client/components/ProfileForm'
 import { UserProfile } from '@/client/components/UserProfile'
 import { PostDetail } from '@/client/components/PostDetail'
 import { Rankings } from '@/client/components/Rankings'
+import { RoomList } from '@/client/components/RoomList'
+import { RoomDetail } from '@/client/components/RoomDetail'
 import { authMiddleware, optionalAuthMiddleware, getEmailFromHeader } from '@/server/middleware/auth'
 import { getDb } from '@/server/db/client'
 import * as queries from '@/server/db/queries'
@@ -200,6 +202,19 @@ pages.get('/posts/:id', optionalAuthMiddleware, async (c) => {
 pages.get('/rankings', optionalAuthMiddleware, async (c) => {
   const user = c.get('user')
   const html = renderPage(<Rankings />, user, '秀句ランキング — 五七五', undefined, 'rankings')
+  return c.html(html)
+})
+
+pages.get('/rooms', optionalAuthMiddleware, async (c) => {
+  const user = c.get('user')
+  const html = renderPage(<RoomList />, user, '連句の座 — 五七五', undefined, 'rooms')
+  return c.html(html)
+})
+
+pages.get('/rooms/:id', optionalAuthMiddleware, async (c) => {
+  const user = c.get('user')
+  const roomId = c.req.param('id')
+  const html = renderPage(<RoomDetail roomId={roomId} />, user, '連句の座 — 五七五', undefined, 'room-detail')
   return c.html(html)
 })
 
