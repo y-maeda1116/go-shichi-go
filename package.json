@@ -22,7 +22,7 @@
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.27",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260701.1",
