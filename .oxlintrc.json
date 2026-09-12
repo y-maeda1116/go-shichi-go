@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "no-eval": "error",
+    "eslint/no-underscore-dangle": ["error", { "allow": ["__INITIAL_USER__", "__INITIAL_PAGE__"] }],
+    "unicorn/no-new-buffer": "error"
+  },
+  "ignorePatterns": ["node_modules/", "dist/", ".wrangler/", "drizzle/"]
+}
