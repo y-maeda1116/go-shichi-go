@@ -148,7 +148,7 @@ npm run build        # Production build
 npm run test         # Run tests
 npm run test:watch   # Watch mode tests
 npm run typecheck    # TypeScript check
-npm run lint         # ESLint with security plugins
+npm run lint         # oxlint
 npm run db:generate  # Generate Drizzle migrations
 npm run db:migrate   # Run migrations
 ```
