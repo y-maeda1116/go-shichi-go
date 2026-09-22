@@ -49,6 +49,8 @@ describe('getEmailFromHeader', () => {
 
 describe('JWT cookie parsing (unit)', () => {
   // Test the JWT parsing logic directly since cookie header is forbidden in fetch API
+  // ⚠️ TEST-ONLY: decodes the JWT payload WITHOUT signature verification.
+  // Never copy this into production code — use a verified JWT library instead.
   function parseJwtPayload(payload: string): { email?: string } {
     try {
       const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')))
