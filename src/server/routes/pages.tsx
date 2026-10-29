@@ -13,6 +13,7 @@ import { authMiddleware, optionalAuthMiddleware, getEmailFromHeader } from '@/se
 import { getDb } from '@/server/db/client'
 import * as queries from '@/server/db/queries'
 import { findUserByEmail } from '@/server/db/queries'
+import { escapeHtml, toJsonForScript } from '@/server/utils/html'
 import type { AuthUser } from '@/types'
 
 const pages = new Hono<{
@@ -32,19 +33,21 @@ function renderPage(component: React.ReactElement, user?: AuthUser, title?: stri
 
   const ogTags = ogImage
     ? `
-  <meta property="og:image" content="${ogImage}">
+  <meta property="og:image" content="${escapeHtml(ogImage)}">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="${ogImage}">`
+  <meta name="twitter:image" content="${escapeHtml(ogImage)}">`
     : ''
+
+  const pageTitle = escapeHtml(title ?? '五七五 — 俳句・短歌SNS')
 
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>${title ?? '五七五 — 俳句・短歌SNS'}</title>
-  <meta property="og:title" content="${title ?? '五七五 — 俳句・短歌SNS'}">
+  <title>${pageTitle}</title>
+  <meta property="og:title" content="${pageTitle}">
   <meta property="og:site_name" content="五七五">
   ${ogTags}
   <link rel="stylesheet" href="/styles/vertical.css">
@@ -53,8 +56,8 @@ function renderPage(component: React.ReactElement, user?: AuthUser, title?: stri
 </head>
 <body>
   <div id="root">${html}</div>
-  <script>window.__INITIAL_USER__ = ${user ? JSON.stringify(user) : 'null'};</script>
-  <script>window.__INITIAL_PAGE__ = ${page ? `'${page}'` : 'null'};</script>
+  <script>window.__INITIAL_USER__ = ${user ? toJsonForScript(user) : 'null'};</script>
+  <script>window.__INITIAL_PAGE__ = ${page ? toJsonForScript(page) : 'null'};</script>
   <script src="/client/entry.js"></script>
 </body>
 </html>`
