@@ -6,3 +6,5 @@ dist/
 .env
 .env.*
 .drizzle/
+.serena/
+.claude/worktrees/
