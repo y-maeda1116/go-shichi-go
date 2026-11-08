@@ -55,6 +55,7 @@ vi.mock('@/server/db/queries', () => ({
     return Promise.resolve(dbMock.postById)
   },
   getLikeCount: () => Promise.resolve(dbMock.likeCount),
+  getLikeCountsBatch: () => Promise.resolve(new Map()),
   hasUserLiked: () => Promise.resolve(dbMock.likedByMe),
   getReactions: () => Promise.resolve(dbMock.reactions),
   getUserReaction: () => Promise.resolve(dbMock.myReaction),

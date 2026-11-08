@@ -22,6 +22,7 @@ vi.mock('@/server/db/queries', () => ({
     return Promise.resolve(mockUser)
   },
   getUserPosts: () => Promise.resolve({ data: [], nextCursor: null }),
+  getLikeCountsBatch: () => Promise.resolve(new Map()),
   findUserByEmail: () => Promise.resolve(mockUser),
   createUser: (_db: unknown, data: Record<string, unknown>) =>
     Promise.resolve({ ...mockUser, ...data }),
