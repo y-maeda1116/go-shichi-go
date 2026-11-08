@@ -185,6 +185,24 @@ export async function getLikeCount(db: Db, postId: string) {
   return rows[0]?.count ?? 0
 }
 
+export async function getLikeCountsBatch(db: Db, postIds: string[]): Promise<Map<string, number>> {
+  if (postIds.length === 0) return new Map()
+
+  const rows = await db.select({
+    postId: schema.likes.postId,
+    count: count(),
+  })
+    .from(schema.likes)
+    .where(inArray(schema.likes.postId, postIds))
+    .groupBy(schema.likes.postId)
+
+  const map = new Map<string, number>()
+  for (const row of rows) {
+    map.set(row.postId, row.count)
+  }
+  return map
+}
+
 export async function toggleLike(db: Db, userId: string, postId: string): Promise<'liked' | 'unliked'> {
   const existing = await db.select()
     .from(schema.likes)

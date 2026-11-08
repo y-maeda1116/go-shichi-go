@@ -37,10 +37,15 @@ users.get('/:id/posts', async (c) => {
   const cursor = c.req.query('cursor')
   const result = await queries.getUserPosts(db, userId, cursor)
 
-  const dataWithLikes = await Promise.all(
-    result.data.map(async (row: { post: { id: string }; [k: string]: unknown }) => {
-      const likeCount = await queries.getLikeCount(db, row.post.id)
-      return { ...row.post, author: row.author, likeCount, likedByMe: false }
+  const postIds = result.data.map((row: { post: { id: string } }) => row.post.id)
+  const likeCountsMap = await queries.getLikeCountsBatch(db, postIds)
+
+  const dataWithLikes = result.data.map(
+    (row: { post: { id: string }; [k: string]: unknown }) => ({
+      ...row.post,
+      author: row.author,
+      likeCount: likeCountsMap.get(row.post.id) ?? 0,
+      likedByMe: false,
     }),
   )
 

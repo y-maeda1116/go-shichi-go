@@ -25,24 +25,20 @@ posts.get('/',
     const user = c.get('user')
     const postIds = result.data.map(r => r.post.id)
 
-    const [reactionsMap, myReactionsMap] = await Promise.all([
+    const [reactionsMap, myReactionsMap, likeCountsMap] = await Promise.all([
       queries.getReactionsBatch(db, postIds),
       user ? queries.getUserReactionsBatch(db, user.id, postIds) : Promise.resolve(new Map()),
+      queries.getLikeCountsBatch(db, postIds),
     ])
 
-    const dataWithLikes = await Promise.all(
-      result.data.map(async (row) => {
-        const likeCount = await queries.getLikeCount(db, row.post.id)
-        return {
-          ...row.post,
-          author: row.author,
-          likeCount,
-          likedByMe: myReactionsMap.has(row.post.id),
-          reactions: reactionsMap.get(row.post.id) ?? {},
-          myReaction: myReactionsMap.get(row.post.id) ?? null,
-        }
-      }),
-    )
+    const dataWithLikes = result.data.map((row) => ({
+      ...row.post,
+      author: row.author,
+      likeCount: likeCountsMap.get(row.post.id) ?? 0,
+      likedByMe: myReactionsMap.has(row.post.id),
+      reactions: reactionsMap.get(row.post.id) ?? {},
+      myReaction: myReactionsMap.get(row.post.id) ?? null,
+    }))
 
     return c.json({
       success: true,
